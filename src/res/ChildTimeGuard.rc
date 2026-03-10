@@ -1,0 +1,149 @@
+#include <windows.h>
+#include "resource.h"
+#include "version_build.h"
+
+// Use UTF-8 for this file so Chinese in VERSIONINFO is valid.
+#pragma code_page(65001)
+
+// Application icon, embedded in the executable.
+IDI_APP_ICON ICON "app.ico"
+
+// Embedded language.json for i18n (UTF-8). Path relative to .rc file.
+IDR_LANGUAGE_JSON RCDATA "..\\i18n\\language.json"
+
+// Version info: Win right-click Properties -> Details.
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION BUILD_DATE_YEAR,BUILD_DATE_MONTH,BUILD_DATE_DAY,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "Child Time Guard"
+            VALUE "FileVersion", BUILD_DATE_STRING
+            VALUE "ProductName", "Child Time Guard"
+            VALUE "ProductVersion", "1.0.0"
+            VALUE "LegalCopyright", "https://Blog.T725.CN/ChildTimeGuard"
+        END
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "FileDescription", "儿童时间守护"
+            VALUE "FileVersion", BUILD_DATE_STRING
+            VALUE "ProductName", "儿童时间守护"
+            VALUE "ProductVersion", "1.0.0"
+            VALUE "LegalCopyright", "https://Blog.T725.CN/ChildTimeGuard"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+// Layout in dialog units (DLU).
+// Control dialog: 2 columns x 5 rows.
+//   Column 1 width 50 DLU (right-aligned): rows 1-3 empty, row 4 "Parent PIN:", row 5 empty.
+//   Column 2 starts at 64 (50+8 gap). Password edit width 50 DLU.
+//   OK/Cancel row: centered in window width (not aligned to column grid).
+IDD_CTRL_DIALOG DIALOGEX 0, 0, 160, 114
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+CAPTION "Child Time Guard"
+FONT 9, "Segoe UI", 400, 0, 0
+BEGIN
+    // Column 2, Row 1: Modify config
+    CONTROL         "Modify config", IDC_RADIO_CONFIG,
+                    "Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP, 64, 14, 92, 12
+    // Column 2, Row 2: Suspend (min): [Y]
+    CONTROL         "Suspend (min):", IDC_RADIO_SUSPEND,
+                    "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 64, 30, 54, 12
+    EDITTEXT        IDC_EDIT_Y, 122, 30, 26, 12, ES_CENTER | ES_NUMBER | WS_TABSTOP
+    // Column 2, Row 3: Exit app
+    CONTROL         "Exit app", IDC_RADIO_EXIT,
+                    "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 64, 46, 56, 12
+    // Column 1 Row 4: Parent PIN: (width 50)  |  Column 2 Row 4: password edit
+    RTEXT           "Parent PIN:", IDC_CTRL_PWD_LABEL, 6, 63, 50, 12
+    EDITTEXT        IDC_EDIT_PASSWORD, 64, 62, 50, 12, ES_PASSWORD | WS_TABSTOP
+    LTEXT           "", IDC_STATIC_PWD_ERROR, 64, 76, 96, 10, SS_LEFT
+    // Row 5: OK and Cancel centered in dialog (50+8+50=108, left = (160-108)/2 = 26)
+    PUSHBUTTON      "Cancel", IDCANCEL, 26, 92, 50, 14, WS_TABSTOP
+    DEFPUSHBUTTON   "OK", IDOK, 84, 92, 50, 14, WS_TABSTOP
+END
+
+// Config dialog:
+//   2x8 logical grid:
+//   column 1: right-aligned labels; column 2: left-aligned value controls.
+//   Layout uses dialog units only to avoid screen-dependent absolute pixels.
+IDD_CONFIG_DIALOG DIALOGEX 0, 0, 200, 152
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+CAPTION "Child Time Guard - Config"
+FONT 9, "Segoe UI", 400, 0, 0
+BEGIN
+    // Row 1: usable time (24h) - help "?" at 10 DLU from left, then label and value column.
+    PUSHBUTTON      "?", IDC_BTN_AVAILABLE_TIME_HELP, 10, 14, 12, 12, WS_TABSTOP
+    RTEXT           "Usable time (24h):", IDC_STATIC_USABLE_TIME, 26, 16, 70, 10
+    EDITTEXT        IDC_EDIT_START_TIME, 104, 14, 34, 12, ES_CENTER | WS_TABSTOP
+    LTEXT           "~", IDC_STATIC_TILDE, 142, 16, 6, 8
+    EDITTEXT        IDC_EDIT_END_TIME, 152, 14, 34, 12, ES_CENTER | WS_TABSTOP
+
+    // Row 2: max continuous minutes (N).
+    RTEXT           "Continuous use (min):", IDC_STATIC_MAX_CONT, 6, 32, 90, 10
+    EDITTEXT        IDC_EDIT_MAX_CONT, 104, 30, 50, 12, ES_NUMBER | WS_TABSTOP
+
+    // Row 3: warning minutes (M).
+    RTEXT           "Countdown Reminder (min):", IDC_STATIC_WARN, 6, 48, 90, 10
+    EDITTEXT        IDC_EDIT_WARN_MIN, 104, 46, 50, 12, ES_NUMBER | WS_TABSTOP
+
+    // Row 4: rest lock minutes (X).
+    RTEXT           "Rest Screen Lock (min):", IDC_STATIC_REST, 6, 64, 90, 10
+    EDITTEXT        IDC_EDIT_REST_MIN, 104, 62, 50, 12, ES_NUMBER | WS_TABSTOP
+
+    // Row 5: parent PIN (plain text).
+    RTEXT           "Parent PIN:", IDC_STATIC_PARENT_PIN, 6, 80, 90, 10
+    EDITTEXT        IDC_EDIT_PARENT_PIN, 104, 78, 50, 12, ES_NUMBER | WS_TABSTOP
+
+    // Row 6: auto start (checkbox as value).
+    RTEXT           "Auto start:", IDC_STATIC_AUTOSTART, 6, 96, 90, 10
+    CONTROL         "", IDC_CHECK_AUTOSTART,
+                    "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 104, 94, 10, 10
+
+    // Row 7: language.
+    RTEXT           "Language:", IDC_STATIC_LANGUAGE, 6, 112, 90, 10
+    COMBOBOX        IDC_COMBO_LANGUAGE, 104, 110, 82, 70, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    // Row 8: buttons (width 50 DLU). Cancel right-aligned in column 1, OK left-aligned in column 2.
+    PUSHBUTTON      "Cancel", IDCANCEL, 46, 132, 50, 14, WS_TABSTOP
+    DEFPUSHBUTTON   "OK", IDOK, 104, 132, 50, 14, WS_TABSTOP
+END
+
+// Reminder dialog (countdown warning): message + countdown + "I got it" button.
+// Layout in DLU; prompt left 10 DLU; width 250 DLU; countdown and button horizontally centered.
+IDD_REMINDER_DIALOG DIALOGEX 0, 0, 250, 68
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+CAPTION "Child Time Guard"
+FONT 9, "Segoe UI", 400, 0, 0
+BEGIN
+    LTEXT           "", IDC_REMINDER_MESSAGE, 10, 10, 230, 20, SS_LEFT
+    LTEXT           "", IDC_REMINDER_COUNTDOWN, 10, 26, 230, 14, SS_CENTER
+    DEFPUSHBUTTON   "I got it", IDOK, 95, 44, 60, 14, WS_TABSTOP
+END
+
+// Hotkey registration failure (App layer): message + OK, title/msg set in code.
+IDD_HOTKEY_FAILURE_DIALOG DIALOGEX 0, 0, 280, 72
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+CAPTION "Child Time Guard"
+FONT 9, "Segoe UI", 400, 0, 0
+BEGIN
+    LTEXT           "", IDC_HOTKEY_FAILURE_MSG, 10, 10, 260, 32, SS_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 115, 50, 50, 14, WS_TABSTOP
+END

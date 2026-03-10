@@ -1,0 +1,3 @@
+# CMake 构建输出目录（仅根目录）
+/build/
+/build_tests/
