@@ -1,0 +1,10 @@
+#ifndef VERSION_BUILD_H
+#define VERSION_BUILD_H
+
+// Generated at configure time: compilation date for FILEVERSION / FileVersion.
+#define BUILD_DATE_YEAR  @BUILD_DATE_YEAR@
+#define BUILD_DATE_MONTH @BUILD_DATE_MONTH@
+#define BUILD_DATE_DAY   @BUILD_DATE_DAY@
+#define BUILD_DATE_STRING "@BUILD_DATE_STRING@"
+
+#endif
