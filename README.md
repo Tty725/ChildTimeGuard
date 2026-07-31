@@ -1,4 +1,4 @@
-Language support: [简体中文](https://blog.t725.cn/ChildTimeGuard/), English. For other languages, please edit the `%AppData%\ChildTimeGuardlanguage.json` file yourself.
+Language support: [简体中文](https://blog.t725.cn/child-time-guard/), English. For other languages, please edit the `%AppData%\ChildTimeGuardlanguage.json` file yourself.
 
 Developed using Vibe Coding to help children at home use the computer for entertainment in a regular manner. 
 
